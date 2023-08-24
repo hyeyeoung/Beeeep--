@@ -7,11 +7,10 @@ import pandas as pd
 chrome_dir = './chromedriver.exe'
 
 if __name__ == '__main__':
-
     parser = argparse.ArgumentParser()
-    parser.add_argument("--get_links", default=False, action="store_true")
-    parser.add_argument("--get_videos", default=False, action="store_true")
-    parser.add_argument("--get_texts", default=False, action="store_true")
+    parser.add_argument("--get_links", default=False, action="store_true") # ok
+    parser.add_argument("--get_videos", default=False, action="store_true") # ok
+    parser.add_argument("--get_texts", default=False, action="store_true") #processing
     parser.add_argument("--get_audios", default=False, action="store_true")
     parser.add_argument("--labeling", default=False, action="store_true")
     parser.add_argument("--get_images", default=False, action="store_true")
@@ -24,7 +23,7 @@ if __name__ == '__main__':
 
     if args.get_links:
         print('Get Links')
-        playlist_urls = ['링크들']
+        playlist_urls = ['https://youtube.com/playlist?list=PLHgcKPwAthGqlKfUvH3d-bNAwjelHtMVh']
         save_playlist_links(playlist_urls, links_dir)
 
     if args.get_videos:

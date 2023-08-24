@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from pytube import YouTube, Playlist
 from moviepy.editor import *
+import re
 import librosa
 import librosa.display
 import matplotlib.pyplot as plt
@@ -13,16 +14,15 @@ def make_dir(dir_):
         os.mkdir(dir_)
 
 def save_playlist_links(playlist_urls, links_dir):
-    main_link = "https://www.youtube.com"
     links = []
-
+    count = 0
     for playlist_url in playlist_urls:
         pl = Playlist(playlist_url)
-        for tmp_link in pl.parse_links():
-            link = main_link + tmp_link
+        pl._video_regex = re.compile(r"\"url\":\"(/watch\?v=[\w-]*)")
+        for tmp_link in pl.video_urls:
             try: # 비공개영상 접근 불가, key error
-                yt = YouTube(link) 
-                links.append(link)
+                yt = YouTube(tmp_link) 
+                links.append(tmp_link)
                 count += 1
                 print('Link read', count)
             except:
@@ -35,7 +35,11 @@ def save_playlist_links(playlist_urls, links_dir):
 def link_to_video(link, video_dir):
     yt = YouTube(link)
     video_name = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').first().download()
-    re_name = os.path.join(video_dir, link.split('v=')[-1]+'.mp4')
+    # re_name = os.path.join(video_dir, link.split('v=')[-1]+'.mp4')
+    # os.rename(video_name, re_name)
+    # return re_name
+    video_id = yt.video_id  # 비디오의 유효한 ID 추출
+    re_name = os.path.join(video_dir, f'{video_id}.mp4')
     os.rename(video_name, re_name)
     return re_name
 
@@ -45,13 +49,13 @@ def save_videos(df, links_videos_dir):
 
     for link in set(df.links):
         try: # 접근불가 영상
-            name = link_to_video(link, video_dir)
+            name = link_to_video(link, "data/video")
             with open(link, 'a') as f:
                 f.write('{},{}\n'.format(link, name))
             count += 1
             print('Video read', count)
-        except:
-            print('Except')
+        except Exception as ex:
+            print(ex)
 
 def save_text(download_path, video): #다운로드에 있는 파일을 경로변경 및 해당 파일의 경로 return
     video = video.split(os.sep)[-1].split(".")[0]
