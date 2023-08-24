@@ -16,13 +16,14 @@ def make_dir(dir_):
 def save_playlist_links(playlist_urls, links_dir):
     links = []
     count = 0
+    main_link = "https://www.youtube.com/watch?v="
     for playlist_url in playlist_urls:
         pl = Playlist(playlist_url)
-        pl._video_regex = re.compile(r"\"url\":\"(/watch\?v=[\w-]*)")
         for tmp_link in pl.video_urls:
             try: # 비공개영상 접근 불가, key error
-                yt = YouTube(tmp_link) 
-                links.append(tmp_link)
+                yt = YouTube(tmp_link)
+                link = main_link + str(yt.video_id)
+                links.append(link)
                 count += 1
                 print('Link read', count)
             except:
@@ -33,24 +34,26 @@ def save_playlist_links(playlist_urls, links_dir):
     print('Links saved !')
 
 def link_to_video(link, video_dir):
-    yt = YouTube(link)
-    video_name = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').first().download()
-    # re_name = os.path.join(video_dir, link.split('v=')[-1]+'.mp4')
-    # os.rename(video_name, re_name)
-    # return re_name
-    video_id = yt.video_id  # 비디오의 유효한 ID 추출
-    re_name = os.path.join(video_dir, f'{video_id}.mp4')
-    os.rename(video_name, re_name)
-    return re_name
+    try:
+        yt = YouTube(link)
+        video_name = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').first().download()
+        # print(video_name)
+        video_id = yt.video_id  # 비디오의 유효한 ID 추출
+        re_name = os.path.join(video_dir, f'{video_id}.mp4')
+        # print(re_name)
+        os.rename(video_name, re_name)
+        return re_name
+    except Exception as e:
+        print(e)
 
 def save_videos(df, links_videos_dir):
     with open(links_videos_dir, 'a') as f:
         f.write('links,videos\n')
-
+    count = 0
     for link in set(df.links):
         try: # 접근불가 영상
-            name = link_to_video(link, "data/video")
-            with open(link, 'a') as f:
+            name = link_to_video(link, "data\\video")
+            with open(links_videos_dir, 'a') as f:
                 f.write('{},{}\n'.format(link, name))
             count += 1
             print('Video read', count)

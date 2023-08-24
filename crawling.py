@@ -24,19 +24,27 @@ def crawling(df, chrome_dir, links_videos_texts_dir):
         f.write('links,videos,texts\n')
 
     browser = webdriver.Chrome(chrome_dir)
-    browser.get('https://vrew.voyagerx.com/ko/try/')
-    wait = WebDriverWait(browser, 4)
-    element = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, 'close')))
-    browser.find_element_by_class_name('close').click()
-    time.sleep(2)
+    ## 자막 추출사이트 변경
+    browser.get('https://downsub.com/') 
+    wait = WebDriverWait(browser, 15)
+    # try:
+    #     element = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="input-34"]')))
+    #     # browser.find_element_by_class_name('close').click()
+    #     element.click()
+    # except:
+    #     print("error! next code")
+    # time.sleep(5)
     print('-'*50)
 
     # 크롤링 루프
+    print(df)
     for idx, row in df.iterrows():
+        print("1")
         video = row['videos'][2:]
         print(video,'추출')
         
         # 기본 변수 생성
+        # 이 부분부터 수정 ㄱㄱ
         path = os.path.join(os.getcwd(), video)
         check = browser.find_elements_by_class_name('word')[:10]
         new_check = browser.find_elements_by_class_name('word')[:10]
@@ -85,3 +93,4 @@ def crawling(df, chrome_dir, links_videos_texts_dir):
             f.write('{},{},{}\n'.format(row['links'], row['videos'], text_file))
         print("저장완료")
         print('-'*50)       
+
