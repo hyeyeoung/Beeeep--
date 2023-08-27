@@ -64,4 +64,14 @@
 
 ### ref
 https://github.com/Tony607/Keras-Trigger-Word
-  
+
+
+### 실행방법(제일 최신)
+1. git clone https://github.com/hyeyeoung/Beeeep--
+2. pip install -r requriements.txt
+3. mkdir data
+4. python get_data.py --get_links
+
+### 08.27 수정사항
+1. requirements.txt 변경
+2. pysrt 추가 해야함(추가하면 추가한 사람이 이 문장 삭제 ㄱㄱ)
