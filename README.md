@@ -73,7 +73,6 @@ https://github.com/Tony607/Keras-Trigger-Word
 4. python get_data.py --get_links
 
 ### 위방법대로 실행 안되면, 원본 레파지토리 clone 후 아래 명령어 실행
-
 1. pip install --upgrade numpy Cython
 2. pip install pandas
 3. pip install pytube
@@ -81,8 +80,9 @@ https://github.com/Tony607/Keras-Trigger-Word
 5. pip install librosa
 6. pip install matplotlib
 7. mkdir data
-8. run 명령어
-- python get_data.py --get_links
+
+- 실행 명령어
+`python get_data.py --get_links`
 
 ### 08.27 수정사항
 1. requirements.txt 변경
