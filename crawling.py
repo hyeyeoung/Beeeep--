@@ -62,7 +62,7 @@ def crawling(df, chrome_dir, links_videos_texts_dir):
         
         # 자막 다운로드
         wait = WebDriverWait(browser, 10)
-        element = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div/div/main/div/div[2]/div/div[1]/div[1]/div[2]/div[1]/button[2]')))
+        element = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div/div/main/div/div[2]/div/div[1]/div[1]/div[2]/div[1]/button[1]')))
         try:
             print("다운로드 시작")
             element.click()
@@ -74,7 +74,7 @@ def crawling(df, chrome_dir, links_videos_texts_dir):
         
         # 자막 파일 이름 변경
         download_path = "c:/Users/{}/Downloads".format(os.getlogin())
-        new_filename = os.path.join(".", "data", "text", video + ".txt")
+        new_filename = os.path.join(".", "data", "text", video + ".srt")
         filename = max([download_path + "/" + f for f in os.listdir(download_path)], key=os.path.getctime)
         shutil.move(os.path.join(download_path, filename), new_filename)
         print("폴더 변경 완료")
