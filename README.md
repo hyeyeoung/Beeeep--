@@ -7,6 +7,9 @@
 3. `mkdir data`
 4. `python get_data.py --get_links`
 
+# 크롬드라이버는 알아서 다운받아야 함.
+각자 버전에 맞는 걸로 알아서 설치하기...
+
 ### 위방법대로 실행 안되면, 원본 레파지토리 clone 후 아래 명령어 실행
 1. `pip install --upgrade numpy Cython`
 2. `pip install pandas`
@@ -18,6 +21,7 @@
 
 - 실행 명령어
 `python get_data.py --get_links`
+
 
 ### 08.28 수정사항
 1. requirements.txt 변경
