@@ -8,6 +8,9 @@ import librosa.display
 import matplotlib.pyplot as plt
 from tqdm import tqdm_notebook
 import pysrt
+#라벨링때매 import 한거
+from pydub import AudioSegment
+
 
 def make_dir(dir_):
     if not os.path.isdir(dir_):
@@ -25,7 +28,7 @@ def save_playlist_links(playlist_urls, links_dir):
                 link = main_link + str(yt.video_id)
                 links.append(link)
                 count += 1
-                if count == 6:
+                if count == 1:
                     break
                 print('Link read', count)
             except:
@@ -148,6 +151,26 @@ def labeling(df, audios_texts_length_dir):
             df['label'][i] = l
     df.to_csv(audios_texts_length_dir, index=False, encoding='utf-8')
     
+def save_label(df, audios_texts_length_dir):
+    data = pd.read_csv(audios_texts_length_dir, encoding='utf-8')  # 인자로 받은 파일 경로 사용
+    audio_folder = "data/label/"
+    text_folder = "data/label/"
+    os.makedirs(audio_folder, exist_ok=True)
+    os.makedirs(text_folder, exist_ok=True)
+    for index, row in data.iterrows():
+        audio_path = row['audio']
+        text = row['text']
+        label = int(row['label'])
+        audio = AudioSegment.from_wav(audio_path)
+        audio_filename = os.path.basename(audio_path)
+        new_audio_path = os.path.join(audio_folder, audio_filename)
+        audio.export(new_audio_path, format="wav")
+        text_filename = f"{os.path.splitext(audio_filename)[0]}.txt"
+        text_path = os.path.join(text_folder, text_filename)
+        with open(text_path, "w", encoding='utf-8') as f:
+            f.write(text)
+        print(f"Processed: {audio_filename}")
+    
 def wave_to_image(audios_texts_length_dir):
     img_dir = os.path.join('.', 'data', 'image')
     make_dir(img_dir)
@@ -174,5 +197,4 @@ def wave_to_image(audios_texts_length_dir):
         log_S = librosa.power_to_db(S, ref=np.max)
 
         plt.imsave(save_path, log_S, cmap='gray')
-
 

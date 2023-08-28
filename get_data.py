@@ -1,4 +1,4 @@
-from utils import make_dir, save_playlist_links, save_videos, save_audios, labeling, wave_to_image
+from utils import make_dir, save_playlist_links, save_videos, save_audios, labeling, wave_to_image, save_label
 
 import os
 import argparse
@@ -13,6 +13,7 @@ if __name__ == '__main__':
     parser.add_argument("--get_texts", default=False, action="store_true") # ok
     parser.add_argument("--get_audios", default=False, action="store_true") # ok
     parser.add_argument("--labeling", default=False, action="store_true") # processing
+    parser.add_argument("--save_label", default=False, action="store_true") # processing
     parser.add_argument("--get_images", default=False, action="store_true") # ok
     args = parser.parse_args()
 
@@ -52,6 +53,12 @@ if __name__ == '__main__':
         print('Labeling')
         df = pd.read_csv(audios_texts_length_dir, encoding='utf-8')
         labeling(df, audios_texts_length_dir)
+    
+    if args.save_label:
+        print('save_label')
+        audios_texts_length_dir = "data/audios_texts_length_labels.csv"
+        data = pd.read_csv(audios_texts_length_dir)
+        save_label(data, audios_texts_length_dir)
     
     if args.get_images:
         print('Get Images')
