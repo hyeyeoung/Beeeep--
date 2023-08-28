@@ -1,4 +1,4 @@
-# MZ김혜영의 레파지토리
+# 실시간 음성 비속어 필터링 프로젝트
 ### 공개SW 개발자 대회에서 진행된 프로젝트입니다.
 ### 실행방법(제일 최신)
 1. `git clone https://github.com/hyeyeoung/Beeeep--`
