@@ -98,7 +98,6 @@ def srt_to_df(path):
             'time' : time,
             'text': sub.text
         })
-    print(df)
     df = pd.DataFrame(data)
     return df
 
