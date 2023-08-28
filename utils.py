@@ -92,13 +92,13 @@ def srt_to_df(path):
     data = []
 
     for sub in subs:
-        print(sub.start.to_time().replace(microsecond=0))
-        time = str(sub.start.to_time().replace(microsecond=0))
+        print(sub.start.to_time())
+        time = str(sub.start.to_time())
         data.append({
             'time' : time,
             'text': sub.text
         })
-
+    print(df)
     df = pd.DataFrame(data)
     return df
 
@@ -124,11 +124,11 @@ def clip_audio(audio_dir):
         
         total = total.append({'audio':tmp_dir, 
                               'text':df['text'][i], 
-                              'length':(end_time-start_time)}, ignore_index=True)
+                              'length':(end_time-start_time) , 'start': (start_time), 'end':(end_time)}, ignore_index=True)
     return total
 
 def save_audios(df, audios_texts_length_dir):
-    result = pd.DataFrame(columns=['audio', 'text', 'length'])
+    result = pd.DataFrame(columns=['audio', 'text', 'length','start','end'])
     for video in df.videos:
         video_dir = video
         audio_dir = video_to_audio(video_dir)
@@ -156,24 +156,34 @@ def labeling(df, audios_texts_length_dir):
                     print("정수를 입력해주세요 ")
     df.to_csv(audios_texts_length_dir, index=False, encoding='utf-8')
     
-def save_label(df, audios_texts_length_dir):
+def save_label(audios_texts_length_dir):
     data = pd.read_csv(audios_texts_length_dir, encoding='utf-8')  # 인자로 받은 파일 경로 사용
     audio_folder = "data/label/"
     text_folder = "data/label/"
+    
     os.makedirs(audio_folder, exist_ok=True)
     os.makedirs(text_folder, exist_ok=True)
+
+    # print(data)
     for index, row in data.iterrows():
         audio_path = row['audio']
         text = row['text']
         label = int(row['label'])
+        start = row['start']
+        end = row['end']
+
+        start_end_label = str(start) + '\t' + str(end) + '\t' +str(label)
         audio = AudioSegment.from_wav(audio_path)
         audio_filename = os.path.basename(audio_path)
         new_audio_path = os.path.join(audio_folder, audio_filename)
         audio.export(new_audio_path, format="wav")
+
         text_filename = f"{os.path.splitext(audio_filename)[0]}.txt"
         text_path = os.path.join(text_folder, text_filename)
+        print(text_filename)
+        
         with open(text_path, "w", encoding='utf-8') as f:
-            f.write(text)
+            f.write(start_end_label)
         print(f"Processed: {audio_filename}")
     
 def wave_to_image(audios_texts_length_dir):

@@ -57,8 +57,7 @@ if __name__ == '__main__':
     if args.save_label:
         print('save_label')
         audios_texts_length_dir = "data/audios_texts_length_labels.csv"
-        data = pd.read_csv(audios_texts_length_dir)
-        save_label(data, audios_texts_length_dir)
+        save_label( audios_texts_length_dir)
     
     if args.get_images:
         print('Get Images')
