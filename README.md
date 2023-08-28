@@ -1,5 +1,15 @@
 # 실시간 음성 비속어 필터링 프로젝트
 ### 공개SW 개발자 대회에서 진행된 프로젝트입니다.
+
+---
+
+## 주의사항
+### 크롬드라이버는 알아서 다운받아야 함.
+각자 버전에 맞는 걸로 알아서 설치하기...
+
+### 파이썬 버전은 3.7.x 여야함
+콘다 사용 추천합니다..
+
 ### 실행방법(제일 최신)
 1. `git clone https://github.com/hyeyeoung/Beeeep--`
 2. `pip install -r requirements.txt`
@@ -7,8 +17,6 @@
 3. `mkdir data`
 4. `python get_data.py --get_links`
 
-# 크롬드라이버는 알아서 다운받아야 함.
-각자 버전에 맞는 걸로 알아서 설치하기...
 
 ### 위방법대로 실행 안되면, 원본 레파지토리 clone 후 아래 명령어 실행
 1. `pip install --upgrade numpy Cython`
