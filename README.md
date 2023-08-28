@@ -1,43 +1,29 @@
 # 실시간 음성 비속어 필터링 프로젝트
 ### 공개SW 개발자 대회에서 진행된 프로젝트입니다.
 
+
+# 0. 환경세팅
+
+1. 파이썬 버전 3.7.x 준비.(Conda 사용 추천)
+2. 자기 크롬에 맞는 크롬드라이버 준비. 
+3. 크롬드라이버는 get_data와 동일한 경로에 위치
+
+# 1. 실행
+
+1. 터미널에 `pip install -r requirements.txt` 명령어 실행
+2. data 폴더에 각자 전달받은 csv파일 넣기
+3. 터미널에 `python get_data.py --get_videos` 실행 -> video가 제대로 다운되는지 확인
+4. 터미널에 `python get_data.py --get_texts` 실행 -> **크롤링이 제대로 확인되고 있는지 확인**, text폴더 확인
+5. 터미널에 `python get_data.py --get_audios` 실행 -> 오디오가 클립대로 잘 분리되고 있는지 확인
+6. 터미널에 `python get_data.py --labeling` 실행
+7. 터미널에서 자막 라벨링
+8. 터미널에 `python get_data.py --get_images` 실행 -> mel spectrom이 잘 다운됐는지 확인
+
+# 3. 주의사항
+* 만약 라이브러리 설치 중 라이브러리 업데이트 해라는 문구가 뜨면 그냥 업데이트하면됨.
+
 ---
-
-## 주의사항
-### 크롬드라이버는 알아서 다운받아야 함.
-각자 버전에 맞는 걸로 알아서 설치하기...
-
-### 파이썬 버전은 3.7.x 여야함
-콘다 사용 추천합니다..
-
-### 실행방법(제일 최신)
-1. `git clone https://github.com/hyeyeoung/Beeeep--`
-2. `pip install -r requirements.txt`
-3.  `pip install --upgrade pyzmq` requirements에 추가해야함
-3. `mkdir data`
-4. `python get_data.py --get_links`
-
-
-### 위방법대로 실행 안되면, 원본 레파지토리 clone 후 아래 명령어 실행
-1. `pip install --upgrade numpy Cython`
-2. `pip install pandas`
-3. `pip install pytube`
-4. `pip install moviepy`
-5. `pip install librosa`
-6. `pip install matplotlib`
-7. `mkdir data`
-
-- 실행 명령어
-`python get_data.py --get_links`
-
-
-### 08.28 수정사항
-1. requirements.txt 변경
-2. pysrt 추가 해야함(추가하면 추가한 사람이 이 문장 삭제 ㄱㄱ)
-3. pyzmq 추가 해야함(추가하면 추가한 사람이 이 문장 삭제 ㄱㄱ)s
-#
-
-# Beep--
+# Beep-- ref
 ### 제 9회 투빅스 컨퍼런스의 일환으로 진행된 프로젝트 입니다.
 [발표자료](http://www.datamarket.kr/xe/board_pdzw77/63632)  
   
