@@ -144,11 +144,16 @@ def labeling(df, audios_texts_length_dir):
     for i, row in df.iterrows():
         if np.isnan(row['label']):
             print('Text:', row['text'])
-            l = int(input('Label: '))
-            if l == 99:
-                df.to_csv(audios_texts_length_dir, index=False, encoding='utf-8')
-                l = int(input('Label: '))
-            df['label'][i] = l
+            while True:
+                try:
+                    l = int(input('Label: '))
+                    if l == 99:
+                        df.to_csv(audios_texts_length_dir, index=False, encoding='utf-8')
+                        l = int(input('Label: '))
+                    df['label'][i] = l
+                    break
+                except ValueError:
+                    print("정수를 입력해주세요 ")
     df.to_csv(audios_texts_length_dir, index=False, encoding='utf-8')
     
 def save_label(df, audios_texts_length_dir):
