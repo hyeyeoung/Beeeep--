@@ -10,10 +10,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--get_links", default=False, action="store_true") # ok
     parser.add_argument("--get_videos", default=False, action="store_true") # ok
-    parser.add_argument("--get_texts", default=False, action="store_true") #processing
-    parser.add_argument("--get_audios", default=False, action="store_true")
-    parser.add_argument("--labeling", default=False, action="store_true")
-    parser.add_argument("--get_images", default=False, action="store_true")
+    parser.add_argument("--get_texts", default=False, action="store_true") # ok
+    parser.add_argument("--get_audios", default=False, action="store_true") # ok
+    parser.add_argument("--labeling", default=False, action="store_true") # processing
+    parser.add_argument("--get_images", default=False, action="store_true") # ok
     args = parser.parse_args()
 
     links_dir = os.path.join(".", "data", "links.csv")
@@ -31,7 +31,7 @@ if __name__ == '__main__':
         video_dir = os.path.join('.','data','video')
         make_dir(video_dir)
         df = pd.read_csv(links_dir)
-        save_videos(df, links_videos_dir)
+        save_videos(df, links_videos_dir,video_dir)
 
     if args.get_texts:
         from crawling import crawling
@@ -50,7 +50,7 @@ if __name__ == '__main__':
 
     if args.labeling:
         print('Labeling')
-        df = pd.read_csv(audios_texts_length_dir, encoding='ms949')
+        df = pd.read_csv(audios_texts_length_dir, encoding='utf-8')
         labeling(df, audios_texts_length_dir)
     
     if args.get_images:

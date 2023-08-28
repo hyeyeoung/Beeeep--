@@ -3,11 +3,11 @@ import pandas as pd
 import numpy as np
 from pytube import YouTube, Playlist
 from moviepy.editor import *
-import re
 import librosa
 import librosa.display
 import matplotlib.pyplot as plt
 from tqdm import tqdm_notebook
+import pysrt
 
 def make_dir(dir_):
     if not os.path.isdir(dir_):
@@ -25,6 +25,8 @@ def save_playlist_links(playlist_urls, links_dir):
                 link = main_link + str(yt.video_id)
                 links.append(link)
                 count += 1
+                if count == 6:
+                    break
                 print('Link read', count)
             except:
                 print('Except')
@@ -37,22 +39,20 @@ def link_to_video(link, video_dir):
     try:
         yt = YouTube(link)
         video_name = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').first().download()
-        # print(video_name)
         video_id = yt.video_id  # 비디오의 유효한 ID 추출
         re_name = os.path.join(video_dir, f'{video_id}.mp4')
-        # print(re_name)
         os.rename(video_name, re_name)
         return re_name
     except Exception as e:
         print(e)
 
-def save_videos(df, links_videos_dir):
+def save_videos(df, links_videos_dir,video_dir):
     with open(links_videos_dir, 'a') as f:
         f.write('links,videos\n')
     count = 0
     for link in set(df.links):
         try: # 접근불가 영상
-            name = link_to_video(link, "data\\video")
+            name = link_to_video(link, video_dir)
             with open(links_videos_dir, 'a') as f:
                 f.write('{},{}\n'.format(link, name))
             count += 1
@@ -62,20 +62,20 @@ def save_videos(df, links_videos_dir):
 
 def save_text(download_path, video): #다운로드에 있는 파일을 경로변경 및 해당 파일의 경로 return
     video = video.split(os.sep)[-1].split(".")[0]
-    source = os.path.join(download_path, video+".txt")
-    target =  os.path.join(".", "data", "text", video+".txt")
+    source = os.path.join(download_path, video+".srt")
+    target =  os.path.join(".", "data", "text", video+".srt")
     os.rename(source, target)
     return target
 
-def change_dir(from_dir, before='video', after='audio'):
+def change_dir(from_dir, before='video', after='text'):
     if after == 'audio':
         type_ = '.wav'
     elif after == 'text':
-        type_ = '.txt'
+        type_ = '.srt'
     
-    to_dir = from_dir.split('/')
+    to_dir = from_dir.split('\\')
     to_dir[-2] = after
-    to_dir[-1] = to_dir[-1].split('.')[0] + type_
+    to_dir[-1] = to_dir[-1].split('.')[0] + type_   
     return os.path.join(*to_dir)
 
 def video_to_audio(video_dir):
@@ -84,14 +84,27 @@ def video_to_audio(video_dir):
     audioclip.write_audiofile(audio_dir)
     return audio_dir
 
+def srt_to_df(path):
+    subs = pysrt.open(path)
+    data = []
+
+    for sub in subs:
+        print(sub.start.to_time().replace(microsecond=0))
+        time = str(sub.start.to_time().replace(microsecond=0))
+        data.append({
+            'time' : time,
+            'text': sub.text
+        })
+
+    df = pd.DataFrame(data)
+    return df
+
 def clip_audio(audio_dir):
     total = pd.DataFrame(columns=['audio','text', 'length'])
-    
-    text_dir = change_dir(audio_dir, before='audio_dir', after='text')
-    
-    df = pd.read_csv(text_dir, header=None, sep='\t')
-    df.columns = ['time', 'text']
-    
+    print(audio_dir)
+    text_dir = change_dir(audio_dir, before='audio_dir', after='text')    
+    df = srt_to_df(text_dir)
+
     for i in range(len(df)):
         full_audio = AudioFileClip(audio_dir)
         full_time = int(full_audio.end)
@@ -121,8 +134,8 @@ def save_audios(df, audios_texts_length_dir):
         except IndexError:
             continue
         result = result.append(clip_df, ignore_index=True) 
-    result['label'] = ""   
-    result.to_csv(audios_texts_length_dir, index=False, encoding='ms949')
+    result['label'] = ""
+    result.to_csv(audios_texts_length_dir, index=False, encoding='utf-8')
 
 def labeling(df, audios_texts_length_dir):
     for i, row in df.iterrows():
@@ -130,15 +143,15 @@ def labeling(df, audios_texts_length_dir):
             print('Text:', row['text'])
             l = int(input('Label: '))
             if l == 99:
-                df.to_csv(audios_texts_length_dir, index=False, encoding='ms949')
+                df.to_csv(audios_texts_length_dir, index=False, encoding='utf-8')
                 l = int(input('Label: '))
             df['label'][i] = l
-    df.to_csv(audios_texts_length_dir, index=False, encoding='ms949')
+    df.to_csv(audios_texts_length_dir, index=False, encoding='utf-8')
     
 def wave_to_image(audios_texts_length_dir):
     img_dir = os.path.join('.', 'data', 'image')
     make_dir(img_dir)
-    df = pd.read_csv(audios_texts_length_dir, encoding='ms949')
+    df = pd.read_csv(audios_texts_length_dir, encoding='utf-8')
     crit_y = 926100
     frame_length = 0.025
     frame_stride = 0.010
@@ -147,14 +160,19 @@ def wave_to_image(audios_texts_length_dir):
         wav = audio
         file_dir, file_id = os.path.split(wav)
         name = file_id.split(".")[0]
-        save_path = os.path.join(img_dir, name)
+        save_path = os.path.join(img_dir, name+'.png')
+        print(name)
 
         y, sr = librosa.load(wav, sr=16000)
         input_nfft = int(round(sr*frame_length))
         input_stride = int(round(sr*frame_stride))
 
-        y = librosa.util.fix_length(y, crit_y)
-        S = librosa.feature.melspectrogram(y, sr=sr, n_mels=128) 
+        # y = librosa.util.fix_length(y, crit_y)
+        y = librosa.util.fix_length(y, size = crit_y)
+
+        S = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=128) 
         log_S = librosa.power_to_db(S, ref=np.max)
 
         plt.imsave(save_path, log_S, cmap='gray')
+
+
