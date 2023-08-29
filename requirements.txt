@@ -38,7 +38,7 @@ keras==2.11.0
 kiwisolver==1.4.4
 lazy_loader==0.3
 libclang==16.0.6
-librosa==0.10.1
+librosa==0.8.0
 llvmlite==0.39.1
 Markdown==3.4.4
 MarkupSafe==2.1.3
