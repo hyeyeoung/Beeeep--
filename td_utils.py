@@ -30,6 +30,7 @@ def match_target_amplitude(sound, target_dBFS):
 
 # Load raw audio files for speech synthesis
 def load_raw_audio(audio_dir):
+    print(audio_dir)
     activates = []
     backgrounds = []
     negatives = []
