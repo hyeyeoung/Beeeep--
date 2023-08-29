@@ -6,9 +6,9 @@ import numpy as np
 
 def graph_spectrogram(wav_file, minus=True, nfft=2048, hop=512):
     rate, data = get_wav_info(wav_file)
-    fs = rate # frequency
+    fs = rate # frequency)
     
-    S = librosa.feature.melspectrogram(data, sr=fs, n_mels=128, n_fft=nfft, hop_length=hop)
+    S = librosa.feature.melspectrogram(y=data, sr=fs, n_fft=nfft, hop_length=hop, n_mels=128)
     log_S = librosa.power_to_db(S, ref=np.max)
     if not minus:
         return log_S
@@ -34,6 +34,7 @@ def load_raw_audio(audio_dir):
     backgrounds = []
     negatives = []
     for filename in os.listdir(audio_dir):
+        print(filename)
         if filename.endswith("wav"):
             if filename.startswith('background'):
                 background = AudioSegment.from_wav(os.path.join(audio_dir, filename))
