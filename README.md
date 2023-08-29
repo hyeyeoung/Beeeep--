@@ -18,8 +18,9 @@
 5. 터미널에 `python get_data.py --get_texts` 실행 -> **크롤링이 제대로 확인되고 있는지 확인**, text폴더 확인
 6. 터미널에 `python get_data.py --get_audios` 실행 -> 오디오가 클립대로 잘 분리되고 있는지 확인
 7. 터미널에 `python get_data.py --labeling` 실행
-8. 터미널에서 자막 라벨링
-9. 터미널에 `python get_data.py --get_images` 실행 -> mel spectrom이 잘 다운됐는지 확인
+9. 터미널에 `python get_data.py --save_label`
+9. 터미널에서 자막 라벨링
+10. 터미널에 `python get_data.py --get_images` 실행 -> mel spectrom이 잘 다운됐는지 확인
 
 # 3. 주의사항
 * 만약 라이브러리 설치 중 라이브러리 업데이트 해라는 문구가 뜨면 그냥 업데이트하면됨.
@@ -51,10 +52,6 @@
     - `demo.py`
 
   
-    
-      
-        
-        
 ## 세부사항
 
 ### 폴더 경로
