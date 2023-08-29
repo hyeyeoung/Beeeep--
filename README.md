@@ -18,41 +18,36 @@
 5. 터미널에 `python get_data.py --get_texts` 실행 -> **크롤링이 제대로 확인되고 있는지 확인**, text폴더 확인
 6. 터미널에 `python get_data.py --get_audios` 실행 -> 오디오가 클립대로 잘 분리되고 있는지 확인
 7. 터미널에 `python get_data.py --labeling` 실행
-9. 터미널에 `python get_data.py --save_label`
+8. 터미널에 `python get_data.py --save_label`
 9. 터미널에서 자막 라벨링
 10. 터미널에 `python get_data.py --get_images` 실행 -> mel spectrom이 잘 다운됐는지 확인
 
 # 3. 주의사항
 * 만약 라이브러리 설치 중 라이브러리 업데이트 해라는 문구가 뜨면 그냥 업데이트하면됨.
 
+
+# 라벨링 입력 방법
+라벨링은 int형 데이터 타입으로 기입한다. 아래는 라벨링에 대한 기준을 설명함.
+- negative (욕설이 아닌 경우) : 0
+- background : 9
+- activate (욕설인 경우)
+
+10 : 시    ex) 시발, 씨발, 시발놈, 씨발새끼, 시발놈아 ... 
+11 : 존    ex) 존나, 존나게 ...
+12 : 새    ex) 새끼, 새끼야 ...
+13 : 병    ex) 병신, 병신년아 ...
+
+**만약 합성어인 경우 앞의 단어를 기준으로 라벨링**
+ex. 시발새끼야 -> 10
+
+
+
+
 ---
-# Beep-- ref
-### 제 9회 투빅스 컨퍼런스의 일환으로 진행된 프로젝트 입니다.
+### Beep-- ref
 [발표자료](http://www.datamarket.kr/xe/board_pdzw77/63632)  
   
 [발표동영상](https://www.youtube.com/watch?v=n1BqCii2yVU)
-
-#### 1) 목표
-    - 한국어 욕설 음성 필터링
-
-#### 2) 데이터 준비
-  1) 유튜브에서 음성 얻기  
-    - `get_data.py`  
-  2) 음성 클래스 별로 분해하기  
-    - `audio_label_cliping.ipynb`   
-  3) Overlay을 통해 데이터 Generations  
-    - `make_train_by_overlay.ipynb`  
-    
-#### 3) 학습    
-   1) Colab을 통해 학습  
-    - `Trigger word detection.ipynb`  
-    
-#### 4) 구현
-   1) 유튜브 url을 넣으면, 필터링 된 동영상 Return  
-    - `demo.py`
-
-  
-## 세부사항
 
 ### 폴더 경로
 
