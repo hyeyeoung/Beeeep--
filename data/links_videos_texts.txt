@@ -1,2 +1,0 @@
-links,videos,texts
-https://www.youtube.com/watch?v=bGFkdfYPPAo,.\data\video\bGFkdfYPPAo.mp4,.\data\text\bGFkdfYPPAo.srt

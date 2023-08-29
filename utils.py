@@ -28,8 +28,6 @@ def save_playlist_links(playlist_urls, links_dir):
                 link = main_link + str(yt.video_id)
                 links.append(link)
                 count += 1
-                if count == 1:
-                    break
                 print('Link read', count)
             except:
                 print('Except')
