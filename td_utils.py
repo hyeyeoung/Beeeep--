@@ -34,7 +34,6 @@ def load_raw_audio(audio_dir):
     backgrounds = []
     negatives = []
     for filename in os.listdir(audio_dir):
-        print(filename)
         if filename.endswith("wav"):
             if filename.startswith('background'):
                 background = AudioSegment.from_wav(os.path.join(audio_dir, filename))
