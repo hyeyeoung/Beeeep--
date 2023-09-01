@@ -47,21 +47,22 @@ def crawling(df, chrome_dir, links_videos_texts_dir):
         print(result)
         browser.get(f'https://downsub.com/?url={link}')
         browser.implicitly_wait(15)
-        time.sleep(15)
+        time.sleep(7)
         # 자막 다운로드
-        wait = WebDriverWait(browser, 10)
-        # element = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="app"]/div/main/div/div[2]/div/div[1]/div[1]/div[2]/div[1]/button[1]')))
-        element = wait.until(EC.presence_of_element_located(
-                (By.XPATH, '/html/body/div/div/main/div/div[2]/div/div[1]/div[1]/div[2]/div[1]/button[1]/span/button')))
 
         try:
+            wait = WebDriverWait(browser, 10)
+        # element = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="app"]/div/main/div/div[2]/div/div[1]/div[1]/div[2]/div[1]/button[1]')))
+            element = wait.until(EC.presence_of_element_located(
+                (By.XPATH, '/html/body/div/div/main/div/div[2]/div/div[1]/div[1]/div[2]/div[1]/button[1]/span/button')))
+
             print("다운로드 시작")
             element.click()
             time.sleep(15) # 자막 다운로드 대기
             print("다운로드 완료")
         except:
             print("다운로드 실패")
-            return  
+            pass
         
         # 자막 파일 이름 변경
         download_path = "c:/Users/{}/Downloads".format(os.getlogin())
