@@ -12,8 +12,8 @@ if __name__ == '__main__':
     parser.add_argument("--get_videos", default=False, action="store_true") # ok
     parser.add_argument("--get_texts", default=False, action="store_true") # ok
     parser.add_argument("--get_audios", default=False, action="store_true") # ok
-    parser.add_argument("--labeling", default=False, action="store_true") # processing
-    parser.add_argument("--save_label", default=False, action="store_true") # processing
+    parser.add_argument("--labeling", default=False, action="store_true") # ok
+    parser.add_argument("--save_label", default=False, action="store_true") # ok
     parser.add_argument("--get_images", default=False, action="store_true") # ok
     args = parser.parse_args()
 

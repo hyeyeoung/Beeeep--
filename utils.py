@@ -140,7 +140,7 @@ def save_audios(df, audios_texts_length_dir):
 def labeling(df, audios_texts_length_dir):
     for i, row in df.iterrows():
         if np.isnan(row['label']):
-            print('Text:', row['text'])
+            print(str(i+1)+' Text:', row['text'])
             while True:
                 try:
                     l = int(input('Label: '))
