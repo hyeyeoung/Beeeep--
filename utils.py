@@ -85,44 +85,91 @@ def video_to_audio(video_dir):
     audioclip.write_audiofile(audio_dir)
     return audio_dir
 
+# def srt_to_df(path):
+#     subs = pysrt.open(path)
+#     data = []
+
+#     for sub in subs:
+#         print(sub.start.to_time())
+#         time = str(sub.start.to_time())
+#         data.append({
+#             'time' : time,
+#             'text': sub.text
+#         })
+#     df = pd.DataFrame(data)
+#     return df
+
 def srt_to_df(path):
     subs = pysrt.open(path)
     data = []
 
     for sub in subs:
-        print(sub.start.to_time())
-        time = str(sub.start.to_time())
+        start_time_sec = sub.start.seconds + sub.start.milliseconds / 1000  # 초로 변환
+        end_time_sec = sub.end.seconds + sub.end.milliseconds / 1000  # 초로 변환
+
         data.append({
-            'time' : time,
+            'start': start_time_sec,
+            'end': end_time_sec,
             'text': sub.text
         })
+
     df = pd.DataFrame(data)
     return df
 
+
+# def clip_audio(audio_dir):
+#     total = pd.DataFrame(columns=['audio','text', 'length'])
+#     print(audio_dir)
+#     text_dir = change_dir(audio_dir, before='audio_dir', after='text')    
+#     df = srt_to_df(text_dir)
+
+#     for i in range(len(df)):
+#         full_audio = AudioFileClip(audio_dir)
+#         full_time = int(full_audio.end)
+        
+#         tmp_dir = audio_dir[:-4] + '_{}.wav'.format(i)
+#         start_time = pd.Timedelta(df['time'][i]).total_seconds()
+#         if i != (len(df)-1):
+#             end_time = pd.Timedelta(df['time'][i+1]).total_seconds()
+#         else:
+#             end_time = full_time
+
+#         tmp_audio = full_audio.subclip(start_time, end_time)
+#         tmp_audio.write_audiofile(tmp_dir)
+        
+#         total = total.append({'audio':tmp_dir, 
+#                               'text':df['text'][i], 
+#                               'length':(end_time-start_time) , 'start': (start_time), 'end':(end_time)}, ignore_index=True)
+#     return total
+
 def clip_audio(audio_dir):
-    total = pd.DataFrame(columns=['audio','text', 'length'])
+    total = pd.DataFrame(columns=['audio', 'text', 'length', 'start', 'end'])
     print(audio_dir)
     text_dir = change_dir(audio_dir, before='audio_dir', after='text')    
     df = srt_to_df(text_dir)
 
     for i in range(len(df)):
         full_audio = AudioFileClip(audio_dir)
-        full_time = int(full_audio.end)
-        
-        tmp_dir = audio_dir[:-4] + '_{}.wav'.format(i)
-        start_time = pd.Timedelta(df['time'][i]).total_seconds()
-        if i != (len(df)-1):
-            end_time = pd.Timedelta(df['time'][i+1]).total_seconds()
-        else:
-            end_time = full_time
+        full_time_sec = full_audio.duration  # 초로 변환
 
-        tmp_audio = full_audio.subclip(start_time, end_time)
+        tmp_dir = audio_dir[:-4] + '_{}.wav'.format(i)
+        start_time_sec = df['start'][i]
+        end_time_sec = df['end'][i]
+
+        tmp_audio = full_audio.subclip(start_time_sec, end_time_sec)
         tmp_audio.write_audiofile(tmp_dir)
-        
-        total = total.append({'audio':tmp_dir, 
-                              'text':df['text'][i], 
-                              'length':(end_time-start_time) , 'start': (start_time), 'end':(end_time)}, ignore_index=True)
+
+        total = total.append({
+            'audio': tmp_dir,
+            'text': df['text'][i],
+            'length': (end_time_sec - start_time_sec),
+            'start': start_time_sec,
+            'end': end_time_sec
+        }, ignore_index=True)
+
     return total
+
+
 
 def save_audios(df, audios_texts_length_dir):
     result = pd.DataFrame(columns=['audio', 'text', 'length','start','end'])
